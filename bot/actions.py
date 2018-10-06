@@ -140,6 +140,10 @@ class BuyUpgrade(ActionTemplate):
                 log.warning("**********UPGRADE ATTACK TO LEVEL 2**********")
                 self.thing_to_upgrade = UpgradeType.AttackPower
                 return 1
+            elif player_info.Defence < self.defense_upgrade[2]:
+                log.warning("**********UPGRADE DEFENSE TO LEVEL 2**********")
+                self.thing_to_upgrade = UpgradeType.Defence
+                return 1
         log.info("No upgrade.")
         return 0
 
