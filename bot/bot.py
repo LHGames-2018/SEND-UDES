@@ -1,4 +1,5 @@
 import logging
+from typing import List
 
 from bot import *
 from bot.actions import *
@@ -34,7 +35,7 @@ class Bot:
         self.actions = [GoHome(), GoMine(), Mine()]
 
 
-    def execute_turn(self, game_map, visible_players):
+    def execute_turn(self, game_map: GameMap, visible_players: List[Player]):
         """
         This is where you decide what action to take.
             :param gameMap: The gamemap.
@@ -47,9 +48,9 @@ class Bot:
 
 
 
+
         log.info("collecting")
         return create_collect_action(RIGHT)
-
 
     def get_mine_position(self):
         return None
