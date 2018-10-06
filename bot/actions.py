@@ -116,6 +116,7 @@ class BuyUpgrade(ActionTemplate):
     def calculate_weight(self, player_info: Player, game_map: GameMap, visible_players: List[Player]):
 
         if player_info.TotalResources < self.upgrade_cost[1]:
+            log.info("No upgrade cuz too poor: {}".format(player_info.TotalResources))
             return 0
         else:
 
@@ -127,7 +128,8 @@ class BuyUpgrade(ActionTemplate):
                 self.thing_to_upgrade = UpgradeType.CollectingSpeed
                 log.warning("**********UPGRADE COLLECTING TO LEVEL 1**********")
                 return 1
-            elif player_info.CarryingCapacity < self.carrying_upgrade[2]:
+        if player_info.TotalResources < self.upgrade_cost[2]:
+            if player_info.CarryingCapacity < self.carrying_upgrade[2]:
                 log.warning("**********UPGRADE CARRYING TO LEVEL 2**********")
                 self.thing_to_upgrade = UpgradeType.CarryingCapacity
                 return 1
@@ -135,7 +137,7 @@ class BuyUpgrade(ActionTemplate):
                 log.warning("**********UPGRADE COLLECTING TO LEVEL 2**********")
                 self.thing_to_upgrade = UpgradeType.CollectingSpeed
                 return 1
-
+        log.info("No upgrade.")
         return 0
 
     def get_action(self, player_info: Player, game_map: GameMap, visible_players: List[Player], grid: Grid):
