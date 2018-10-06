@@ -186,7 +186,6 @@ class GoHunt(ActionTemplate):
                            calc_damage_to_enemy(player_info, p) > 0]
 
         log.info("Visible Players: {}".format(visible_players))
-        log.info("bot ptr: {}".format(self))
         if len(visible_players) == 0:
             next_x, next_y = grid.a_star_search(player_info.Position.to_coords(), Point(-5, 0).to_coords())
 

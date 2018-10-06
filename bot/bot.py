@@ -60,6 +60,7 @@ class Bot:
 
         grid.house = self.player_info.HouseLocation
         biggest_weight = -1
+        log.info("bot ptr: {}".format(self))
         the_best_action: ActionTemplate = None
         log.info("Determining best action: {}".format(the_best_action))
         for action in self.actions:
