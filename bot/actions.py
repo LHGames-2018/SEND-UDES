@@ -127,23 +127,14 @@ class BuyUpgrade(ActionTemplate):
             log.info("No upgrade cuz too poor: {}".format(player_info.TotalResources))
             return 0
         else:
-
-            if player_info.CarryingCapacity < self.carrying_upgrade[1]:
-                self.thing_to_upgrade = UpgradeType.CarryingCapacity
-                log.warning("**********UPGRADE CARRYING TO LEVEL 1**********")
-                return 1
-            elif player_info.CollectingSpeed < self.collect_speed_upgrade[1]:
-                self.thing_to_upgrade = UpgradeType.CollectingSpeed
-                log.warning("**********UPGRADE COLLECTING TO LEVEL 1**********")
+            if player_info.AttackPower < self.attack_upgrade[1]:
+                self.thing_to_upgrade = UpgradeType.AttackPower
+                log.warning("**********UPGRADE ATTACK TO LEVEL 1**********")
                 return 1
         if player_info.TotalResources < self.upgrade_cost[2]:
-            if player_info.CarryingCapacity < self.carrying_upgrade[2]:
-                log.warning("**********UPGRADE CARRYING TO LEVEL 2**********")
-                self.thing_to_upgrade = UpgradeType.CarryingCapacity
-                return 1
-            elif player_info.CollectingSpeed < self.collect_speed_upgrade[2]:
-                log.warning("**********UPGRADE COLLECTING TO LEVEL 2**********")
-                self.thing_to_upgrade = UpgradeType.CollectingSpeed
+            if player_info.AttackPower < self.attack_upgrade[2]:
+                log.warning("**********UPGRADE ATTACK TO LEVEL 2**********")
+                self.thing_to_upgrade = UpgradeType.AttackPower
                 return 1
         log.info("No upgrade.")
         return 0
