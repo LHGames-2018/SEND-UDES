@@ -30,7 +30,7 @@ class Bot:
 
     def before_turn(self, player_info: Player):
         self.player_info = player_info
-        self.actions = [GoHome(), GoMine(), Mine()]
+        self.actions = [BuyUpgrade(), GoHome(), GoMine(), Mine()]
 
     def execute_turn(self, game_map: GameMap, visible_players: List[Player]):
         grid = Grid(30000, 30000)
