@@ -135,6 +135,10 @@ class BuyUpgrade(ActionTemplate):
                 self.thing_to_upgrade = UpgradeType.Defence
                 log.warning("**********UPGRADE DEFENSE TO LEVEL 1**********")
                 return 1
+            elif player_info.MaxHealth < self.health_upgrade[1]:
+                self.thing_to_upgrade = UpgradeType.MaximumHealth
+                log.warning("**********UPGRADE HEALTH TO LEVEL 1**********")
+                return 1
         if player_info.TotalResources < self.upgrade_cost[2]:
             if player_info.AttackPower < self.attack_upgrade[2]:
                 log.warning("**********UPGRADE ATTACK TO LEVEL 2**********")
