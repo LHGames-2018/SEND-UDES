@@ -34,7 +34,7 @@ class Grid:
         cost_so_far = {start: 0}
 
         while not frontier.empty():
-            current = frontier.get()
+            _, current = frontier.get()
 
             if current == goal:
                 break
@@ -46,6 +46,7 @@ class Grid:
                     priority = new_cost + heuristic(goal, nxt)
                     frontier.put((priority, nxt))
                     came_from[nxt] = current
+            frontier.task_done()
 
         path = []
         cur = goal
