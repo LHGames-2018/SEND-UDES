@@ -31,11 +31,10 @@ class Bot:
 
     def before_turn(self, player_info: Player):
         self.player_info: Player = player_info
+        log.info("Current player state: {}".format(player_info))
         self.actions: List[ActionTemplate] = [BuyUpgrade(), GoHome(), GoMine(), Mine()]
 
     def execute_turn(self, game_map: GameMap, visible_players: List[Player]):
-        log.info("Levels: Carrying: {} Speed: {}".format(self.player_info.CarryingCapacity, self.player_info.CollectingSpeed))
-        log.info("Money: {}".format(self.player_info.TotalResources))
         grid = Grid(30000, 30000)
         for column in game_map.tiles:
             for t in column:

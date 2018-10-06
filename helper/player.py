@@ -19,3 +19,10 @@ class Player:
 
     def getUpgradeLevel(self, type):
         return self.UpgradeLevels[type]
+
+    def __str__(self):
+        return "<{} at=({}, {}) home=({}, {}) hp={}/{} a/d={}/{} carry={}/{} speed={} $={}>".format(
+            self.Name, self.Position.x, self.Position.y, self.HouseLocation.x, self.HouseLocation.y,
+            self.Health, self.MaxHealth, self.AttackPower, self.Defence, self.CarriedResources, self.CarryingCapacity,
+            self.CollectingSpeed, self.TotalResources
+        )
