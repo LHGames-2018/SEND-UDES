@@ -1,4 +1,4 @@
-FROM polyhx/python-seed
+FROM polyhx/python-seed:2018
 
 ADD . .
 
