@@ -55,6 +55,10 @@ class Bot:
                     grid.walls.add(t.Position.to_coords())
                     grid.resources[t.Position.to_coords()] = t
                     grid.resources_neighbours.update(grid.neighbors(t.Position.to_coords(), (0, 0)))
+                if t.TileContent == TileContent.Player:
+                    for p in visible_players:
+                        if p.Name == self.last_kill:
+                            grid.walls.add(p.Position.to_coords())
 
         grid.house = self.player_info.HouseLocation
         biggest_weight = -1
