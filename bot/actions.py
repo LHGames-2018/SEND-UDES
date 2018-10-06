@@ -31,7 +31,17 @@ class GoMine(ActionTemplate):
         return calculated_weight
 
     def get_action(self, player_info: Player, game_map: GameMap, visible_players: List[Player], grid: Grid):
-        return create_move_action(UP)
+        closest_position = Point(-100, -100)
+        closest_distance = 1000
+        for resource in grid.resources.values():
+            current_distance = resource.Position.dist_to(player_info.Position)
+            if current_distance < closest_distance:
+                closest_position = resource.Position
+                closest_distance = current_distance
+
+        next_direction = grid.a_star_search(player_info.Position.to_coords(), closest_position.to_coords())
+
+        return create_move_action(next_direction)
 
 
 class Mine(ActionTemplate):
