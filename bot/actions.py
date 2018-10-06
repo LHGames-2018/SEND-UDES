@@ -2,6 +2,7 @@ import logging
 from typing import List
 from bot.search import Grid
 from helper import *
+from math import *
 
 log = logging.getLogger("main")
 from helper.aiHelper import *
@@ -10,6 +11,20 @@ UP    = Point(0, -1)
 DOWN  = Point(0, 1)
 LEFT  = Point(-1, 0)
 RIGHT = Point(1, 0)
+
+def calc_damage_to_enemy(us: Player, enemy: Player):
+
+    offensive_item_damage = 0
+    defensive_item_blocking = 0
+
+    if PurchasableItem.Sword in us.CarriedItems:
+        offensive_item_damage = 2
+
+    if PurchasableItem.Shield in enemy.CarriedItems:
+        defensive_item_blocking = 2
+
+    return floor(3 + us.AttackPower + offensive_item_damage - 2 * (enemy.Defence + defensive_item_blocking) ** 0.6)
+
 
 
 class ActionTemplate:
@@ -163,7 +178,9 @@ class GoHunt(ActionTemplate):
         return 1
 
     def get_action(self, player_info: Player, game_map: GameMap, visible_players: List[Player], grid: Grid):
-        visible_players = [p for p in visible_players if p != self.last_kill]
+
+        visible_players = [p for p in visible_players if p != self.last_kill and
+                           calc_damage_to_enemy(player_info, p) > 0]
         if len(visible_players) == 0:
             next_direction = LEFT
 
