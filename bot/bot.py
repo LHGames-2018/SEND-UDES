@@ -19,6 +19,7 @@ UP = Point(0, -1)
 DOWN = Point(0, 1)
 LEFT = Point(-1, 0)
 RIGHT = Point(1, 0)
+SIDE_MOVE_ACTIONS = {create_move_action(d): d for d in (UP, DOWN, LEFT, RIGHT)}
 
 tick = -1
 turn_counter = -1
@@ -29,22 +30,23 @@ class Bot:
         self.player_info: Player = None
         self.actions = []
         self.last_kill: str = ""
-        self.last_action = None
+        self.last_target = None
         self.last_score = None
 
     def before_turn(self, player_info: Player):
         if self.last_score is None:
             self.last_score = player_info.Score
         
-        if isinstance(self.last_action, GoHunt) and player_info.Score != self.last_score:
-            self.last_kill = (self.last_action.target and self.last_action.target.Name) or self.last_kill
+        if self.last_target is not None and player_info.Score != self.last_score:
+            self.last_kill = self.last_target.Name or self.last_kill
         self.actions: List[ActionTemplate] = [GoHome(), GoHunt(self.last_kill), BuyUpgrade(), GoMine(), Mine()]
         self.player_info: Player = player_info
+        self.last_target = None
         log.info("Current player state: {}".format(player_info))
         log.info("Last kill: {}".format(self.last_kill))
 
     def execute_turn(self, game_map: GameMap, visible_players: List[Player]):
-        grid = Grid(30000, 30000)
+        grid = Grid(30000, 30000, visible_players)
         for column in game_map.tiles:
             for t in column:
                 if t.TileContent in (TileContent.Lava, ):
@@ -72,15 +74,23 @@ class Bot:
                 the_best_action = action
         log.info("Best action: {}".format(the_best_action))
         final_action = the_best_action.get_action(self.player_info, game_map, visible_players, grid)
+        final_move_direction = SIDE_MOVE_ACTIONS.get(final_action)
+        if final_move_direction is not None:
+            going_to = self.player_info.Position + final_move_direction
+            if going_to in grid.weights:
+                # Cut down trees in our path
+                final_action = create_attack_action(final_move_direction)
+            else:
+                for p in visible_players:
+                    if p.Position == going_to:
+                        self.last_target = p
+                        final_action = create_attack_action(final_move_direction)
+
         log.info("Final action: {}".format(final_action))
-        self.last_action = final_action
         return final_action
 
     def get_mine_position(self):
         return None
 
     def after_turn(self):
-        """
-        Gets called after executeTurn
-        """
         self.last_score = self.player_info.Score

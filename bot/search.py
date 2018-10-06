@@ -4,9 +4,10 @@ from helper import Point
 
 
 class Grid:
-    def __init__(self, width, height):
+    def __init__(self, width, height, players):
         self.width = width
         self.height = height
+        self.players = players
         self.walls = set()
         self.resources = dict()
         self.resources_neighbours = set()

@@ -33,9 +33,6 @@ def move(grid: Grid, from_pos: Point, to_pos: Point):
     next_position = Point(next_x, next_y)
     next_direction = next_position - from_pos
 
-    if next_position.to_coords() in grid.weights:  # If its a tree, cut it down
-        return create_attack_action(next_direction)
-
     return create_move_action(next_direction)
 
 
@@ -69,13 +66,7 @@ class GoMine(ActionTemplate):
         return calculated_weight
 
     def get_action(self, player_info: Player, game_map: GameMap, visible_players: List[Player], grid: Grid):
-        closest_position = Point(-100, -100)
-        closest_distance = 1000
-        for resource in grid.resources.values():
-            current_distance = resource.Position.dist_to(player_info.Position)
-            if current_distance < closest_distance:
-                closest_position = resource.Position
-                closest_distance = current_distance
+        closest_position = sorted(grid.resources.values(), key=lambda r: r.Position.dist_to(player_info.Position))[0]
 
         return move(grid, player_info.Position, closest_position)
 
@@ -164,7 +155,6 @@ class BuyUpgrade(ActionTemplate):
 class GoHunt(ActionTemplate):
     def __init__(self, last_kill: str):
         self.last_kill = last_kill
-        self.target = None
 
     def calculate_weight(self, player_info: Player, game_map: GameMap, visible_players: List[Player]):
         return 1
@@ -176,22 +166,6 @@ class GoHunt(ActionTemplate):
         if len(visible_players) == 0:
             return move(grid, player_info.Position, LEFT.mul(5))
 
-        closest_position = Point(-100, -100)
-        closest_distance = 1000
-        for enemy in visible_players:
-            current_distance = enemy.Position.dist_to(player_info.Position)
-            if current_distance < closest_distance:
-                closest_position = enemy.Position
-                closest_distance = current_distance
-                self.target = enemy
+        closest_enemy = sorted(visible_players, key=lambda p: p.Position.dist_to(player_info.Position))[0]
 
-        next_x, next_y = grid.a_star_search(player_info.Position.to_coords(), closest_position.to_coords())
-
-        next_position = Point(next_x, next_y)
-        next_direction = next_position - player_info.Position
-
-        if next_position == self.target.Position or game_map.getTileAt(next_position) == TileContent.Wall:  # If its a tree or a player, cut it down
-            return create_attack_action(next_direction)
-
-        self.target = None
-        return create_move_action(next_direction)
+        return move(grid, player_info.Position, closest_enemy.Position)
