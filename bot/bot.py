@@ -14,7 +14,7 @@ LEFT  = Point(-1, 0)
 RIGHT = Point(1, 0)
 
 tick = -1
-sequence = [LEFT, LEFT, LEFT, LEFT, DOWN, DOWN, DOWN, DOWN, DOWN]
+sequence = [DOWN, DOWN, DOWN]
 return_way = [UP, UP, UP, UP, LEFT, LEFT , LEFT]
 second_go = [RIGHT, RIGHT, RIGHT, DOWN, DOWN, DOWN, DOWN]
 
@@ -40,11 +40,12 @@ class Bot:
         log.info("self {}".format(self.__dict__))
         log.info("visible_players {}".format(visible_players.__dict__))
         tick += 1
+
         if tick < len(sequence):
             log.info("going {}".format(sequence[tick]))
             return create_move_action(sequence[tick])
         log.info("collecting")
-        return create_collect_action(DOWN)
+        return create_collect_action(RIGHT)
 
     def after_turn(self):
         """
