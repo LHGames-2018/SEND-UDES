@@ -128,9 +128,11 @@ class BuyUpgrade(ActionTemplate):
                 return 1
             elif player_info.CarryingCapacity < self.carrying_upgrade[2]:
                 log.warning("**********UPGRADE CARRYING TO LEVEL 2**********")
+                self.thing_to_upgrade = UpgradeType.CarryingCapacity
                 return 1
             elif player_info.CollectingSpeed < self.collect_speed_upgrade[2]:
                 log.warning("**********UPGRADE COLLECTING TO LEVEL 2**********")
+                self.thing_to_upgrade = UpgradeType.CollectingSpeed
                 return 1
 
         return 0
