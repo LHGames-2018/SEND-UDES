@@ -48,6 +48,7 @@ class Bot:
         log.info("Determining best action: {}".format(the_best_action))
         for action in self.actions:
             weight = action.calculate_weight(self.player_info, game_map, visible_players)
+            log.info("Weight for action {}: {}".format(action, weight))
             if weight > biggest_weight:
                 biggest_weight = weight
                 the_best_action = action
