@@ -16,7 +16,7 @@ class Grid:
     
     def in_bounds(self, coord):
         x, y = coord
-        return 0 <= x < self.width and 0 <= y < self.height
+        return -10 <= x < self.width and -10 <= y < self.height
     
     def passable(self, coord):
         return coord not in self.walls
