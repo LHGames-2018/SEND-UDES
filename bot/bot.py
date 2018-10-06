@@ -45,7 +45,8 @@ class Bot:
         for column in game_map.tiles:
             for tile in column:
                 tile.TileContent                
-
+        for action in self.actions:
+            action.calculate_weight(self.PlayerInfo, game_map, visible_players)
 
 
 
