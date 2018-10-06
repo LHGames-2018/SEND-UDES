@@ -42,9 +42,9 @@ class Bot:
         if os.path.exists("last_kill"):
             with open("last_kill", "br") as fp:
                 self.last_kill = pickle.load(fp)
-        if os.path.exists("last_action"):
-            with open("last_action", "br") as fp:
-                self.last_action = pickle.load(fp)
+        if os.path.exists("last_target"):
+            with open("last_target", "br") as fp:
+                self.last_target = pickle.load(fp)
 
         if self.last_score is None:
             self.last_score = player_info.Score
@@ -97,14 +97,11 @@ class Bot:
         log.info("Final action: {}".format(final_action))
         return final_action
 
-    def get_mine_position(self):
-        return None
-
     def after_turn(self):
         self.last_score = self.player_info.Score
         with open("last_score", "bw") as fp:
             pickle.dump(self.last_score, fp)
         with open("last_kill", "bw") as fp:
             pickle.dump(self.last_kill, fp)
-        with open("last_action", "bw") as fp:
-            pickle.dump(self.last_action, fp)
+        with open("last_target", "bw") as fp:
+            pickle.dump(self.last_target, fp)
