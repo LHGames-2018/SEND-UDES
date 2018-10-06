@@ -30,9 +30,13 @@ class Bot:
         self.actions = []
         self.last_kill: str = ""
         self.last_action = None
+        self.last_score = None
 
     def before_turn(self, player_info: Player):
-        if isinstance(self.last_action, GoHunt):
+        if self.last_score is None:
+            self.last_score = player_info.Score
+        
+        if isinstance(self.last_action, GoHunt) and player_info.Score != self.last_score:
             self.last_kill = (self.last_action.target and self.last_action.target.Name) or self.last_kill
         self.actions: List[ActionTemplate] = [GoHome(), GoHunt(self.last_kill), BuyUpgrade(), GoMine(), Mine()]
         self.player_info: Player = player_info
@@ -75,4 +79,4 @@ class Bot:
         """
         Gets called after executeTurn
         """
-        pass
+        self.last_score = self.player_info.Score
