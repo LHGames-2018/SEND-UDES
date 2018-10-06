@@ -37,6 +37,9 @@ class Point(object):
             return self.x == other.x and self.y == other.y
         return NotImplemented
 
+    def dist_to(self, p2):
+        return abs(self.x - p2.x) + abs(self.y - p2.y)
+
     # Distance between two Points
     @staticmethod
     def Distance(p1, p2):
