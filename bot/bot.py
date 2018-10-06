@@ -54,6 +54,7 @@ class Bot:
         self.actions: List[ActionTemplate] = [GoHome(), GoHunt(self.last_kill), BuyUpgrade(), GoMine(), Mine()]
         self.player_info: Player = player_info
         log.info("Current player state: {}".format(player_info))
+        log.info("Last score was: {}".format(self.last_score))
         log.info("Last kill: {}".format(self.last_kill))
 
     def execute_turn(self, game_map: GameMap, visible_players: List[Player]):
