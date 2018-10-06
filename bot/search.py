@@ -23,7 +23,7 @@ class Grid:
     def neighbors(self, coord):
         x, y = coord
         results = [(x+1, y), (x, y-1), (x-1, y), (x, y+1)]
-        return [c for c in results if self.in_bounds(c) and self.passable(c)]
+        return set(c for c in results if self.in_bounds(c) and self.passable(c))
     
     def cost(self, from_node, to_node):
         return self.weights.get(to_node, 1)
@@ -40,7 +40,7 @@ class Grid:
             if current == goal:
                 break
 
-            for nxt in self.neighbors(current):
+            for nxt in (self.neighbors(current) | {goal}):
                 new_cost = cost_so_far[current] + self.cost(current, nxt)
                 if nxt not in cost_so_far or new_cost < cost_so_far[nxt]:
                     cost_so_far[nxt] = new_cost
