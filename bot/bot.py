@@ -72,18 +72,14 @@ class Bot:
 
         grid.house = self.player_info.HouseLocation
         biggest_weight = -1
-        log.info("bot ptr: {}".format(self))
         the_best_action: ActionTemplate = None
-        log.info("Determining best action: {}".format(the_best_action))
         for action in self.actions:
             weight = action.calculate_weight(self.player_info, game_map, visible_players)
-            log.info("Weight for action {}: {}".format(action, weight))
             if weight > biggest_weight:
                 biggest_weight = weight
                 the_best_action = action
         log.info("Best action: {}".format(the_best_action))
         final_action = the_best_action.get_action(self.player_info, game_map, visible_players, grid)
-        log.info("Final action: {}".format(final_action))
         self.last_action = final_action
         return final_action
 
