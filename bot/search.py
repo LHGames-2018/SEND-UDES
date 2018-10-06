@@ -44,7 +44,13 @@ class Grid:
                     frontier.put(nxt, priority)
                     came_from[nxt] = current
 
-        return came_from, cost_so_far
+        path = []
+        cur = goal
+        while cur != start:
+            path.append(cur)
+            cur = came_from[cur]
+
+        return path[-1] - start
 
 
 def heuristic(a, b):
