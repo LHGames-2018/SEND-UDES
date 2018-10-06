@@ -29,11 +29,15 @@ class Bot:
         self.player_info: Player = None
         self.actions = []
         self.last_kill: Player = None
+        self.last_action = None
 
     def before_turn(self, player_info: Player):
+        if isinstance(self.last_action, GoHunt):
+            self.last_kill = self.last_action.target or self.last_kill
         self.actions: List[ActionTemplate] = [GoHunt(self.last_kill), BuyUpgrade(), GoHome(), GoMine(), Mine()]
         self.player_info: Player = player_info
         log.info("Current player state: {}".format(player_info))
+        log.info("Last kill: {}".format(self.last_kill))
 
     def execute_turn(self, game_map: GameMap, visible_players: List[Player]):
         grid = Grid(30000, 30000)
@@ -61,6 +65,7 @@ class Bot:
         log.info("Best action: {}".format(the_best_action))
         final_action = the_best_action.get_action(self.player_info, game_map, visible_players, grid)
         log.info("Final action: {}".format(final_action))
+        self.last_action = final_action
         return final_action
 
     def get_mine_position(self):

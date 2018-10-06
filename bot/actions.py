@@ -157,6 +157,7 @@ class BuyUpgrade(ActionTemplate):
 class GoHunt(ActionTemplate):
     def __init__(self, last_kill: Player):
         self.last_kill = last_kill
+        self.target = None
 
     def calculate_weight(self, player_info: Player, game_map: GameMap, visible_players: List[Player]):
         return 1
@@ -178,6 +179,7 @@ class GoHunt(ActionTemplate):
             if current_distance < closest_distance:
                 closest_position = enemy.Position
                 closest_distance = current_distance
+                self.target = enemy
 
         next_x, next_y = grid.a_star_search(player_info.Position.to_coords(), closest_position.to_coords())
 
