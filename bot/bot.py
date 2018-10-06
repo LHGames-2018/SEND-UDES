@@ -45,13 +45,16 @@ class Bot:
             for t in column:
                 if t.TileContent == TileContent.Wall:
                     grid.walls.add((t.Position.x, t.Position.y))
+        biggest_weight = -1
+        the_best_action: ActionTemplate = None
+        log.info("Determining best action: {}".format(the_best_action))
         for action in self.actions:
-            action.calculate_weight(self.PlayerInfo, game_map, visible_players)
-
-
-
-        log.info("collecting")
-        return create_collect_action(RIGHT)
+            weight = action.calculate_weight(self.PlayerInfo, game_map, visible_players)
+            if weight > biggest_weight:
+                biggest_weight = weight
+                the_best_action = action
+        log.info("Best action: {}".format(the_best_action))
+        return the_best_action.get_action(self.PlayerInfo, game_map, visible_players)
 
     def get_mine_position(self):
         return None
