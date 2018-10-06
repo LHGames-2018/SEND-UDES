@@ -42,6 +42,7 @@ class Bot:
                 if t.TileContent in (TileContent.Wall, ):
                     grid.weights[t.Position.to_coords()] = math.ceil(5 / self.player_info.AttackPower)
                 if t.TileContent in (TileContent.Resource, ):
+                    grid.walls.add(t.Position.to_coords())
                     if t.Density == 1:
                         grid.resources[t.Position.to_coords()] = t
                         grid.resources_neighbours.update(grid.neighbors(t.Position.to_coords()))
