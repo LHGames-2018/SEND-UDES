@@ -27,12 +27,11 @@ turn_counter = -1
 class Bot:
     def __init__(self):
         self.player_info: Player = None
-        self.actions = []
+        self.actions: List[ActionTemplate] = [BuyUpgrade(), GoHome(), GoMine(), Mine()]
 
     def before_turn(self, player_info: Player):
         self.player_info: Player = player_info
         log.info("Current player state: {}".format(player_info))
-        self.actions: List[ActionTemplate] = [BuyUpgrade(), GoHome(), GoMine(), Mine()]
 
     def execute_turn(self, game_map: GameMap, visible_players: List[Player]):
         grid = Grid(30000, 30000)
@@ -45,7 +44,7 @@ class Bot:
                 if t.TileContent in (TileContent.Resource, ):
                     grid.walls.add(t.Position.to_coords())
                     grid.resources[t.Position.to_coords()] = t
-                    grid.resources_neighbours.update(grid.neighbors(t.Position.to_coords()))
+                    grid.resources_neighbours.update(grid.neighbors(t.Position.to_coords(), (0, 0)))
                 if t.TileContent in (TileContent.House, ):
                     grid.house = t.Position
         biggest_weight = -1
