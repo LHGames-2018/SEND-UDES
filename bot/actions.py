@@ -42,7 +42,7 @@ class GoMine(ActionTemplate):
         for resource in grid.resources.values():
             current_distance = resource.Position.dist_to(player_info.Position)
             dist_from_house = resource.Position.dist_to(player_info.HouseLocation)
-            if current_distance < closest_distance and dist_from_house <= 10:
+            if current_distance < closest_distance and dist_from_house <= 13:
                 closest_position = resource.Position
                 closest_distance = current_distance
 
