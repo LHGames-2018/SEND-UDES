@@ -15,8 +15,7 @@ RIGHT = Point(1, 0)
 
 tick = -1
 sequence = [DOWN, DOWN, DOWN]
-return_way = [UP, UP, UP, UP, LEFT, LEFT , LEFT]
-second_go = [RIGHT, RIGHT, RIGHT, DOWN, DOWN, DOWN, DOWN]
+return_way = [UP, UP, UP]
 
 class Bot:
     def __init__(self):
@@ -29,6 +28,8 @@ class Bot:
         """
         self.PlayerInfo = playerInfo
 
+        
+
     def execute_turn(self, game_map, visible_players):
         """
         This is where you decide what action to take.
@@ -38,14 +39,19 @@ class Bot:
         global tick
         log.info("game_map {}".format(game_map))
         log.info("self {}".format(self.__dict__))
-        log.info("visible_players {}".format(visible_players.__dict__))
+        log.info("visible_players {}".format(visible_players))
         tick += 1
 
         if tick < len(sequence):
             log.info("going {}".format(sequence[tick]))
             return create_move_action(sequence[tick])
+        
+        
         log.info("collecting")
         return create_collect_action(RIGHT)
+
+    def get_mine_position():
+        return 
 
     def after_turn(self):
         """
