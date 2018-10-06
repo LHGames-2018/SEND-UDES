@@ -164,7 +164,7 @@ class GoHunt(ActionTemplate):
                            calc_damage_to_enemy(player_info, p) > 0]
 
         if len(visible_players) == 0:
-            return move(grid, player_info.Position, LEFT.mul(5))
+            return move(grid, player_info.Position, player_info.Position + LEFT.mul(5))
 
         closest_enemy = sorted(visible_players, key=lambda p: p.Position.dist_to(player_info.Position))[0]
 
