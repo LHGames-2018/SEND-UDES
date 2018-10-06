@@ -27,11 +27,21 @@ turn_counter = -1
 class Bot:
     def __init__(self):
         self.player_info: Player = None
-        self.actions: List[ActionTemplate] = [BuyUpgrade(), GoHome(), GoMine(), Mine()]
+        self.actions = []
+        self.last_kill: str = ""
+        self.last_action = None
+        self.last_score = None
 
     def before_turn(self, player_info: Player):
+        if self.last_score is None:
+            self.last_score = player_info.Score
+        
+        if isinstance(self.last_action, GoHunt) and player_info.Score != self.last_score:
+            self.last_kill = (self.last_action.target and self.last_action.target.Name) or self.last_kill
+        self.actions: List[ActionTemplate] = [GoHome(), GoHunt(self.last_kill), BuyUpgrade(), GoMine(), Mine()]
         self.player_info: Player = player_info
         log.info("Current player state: {}".format(player_info))
+        log.info("Last kill: {}".format(self.last_kill))
 
     def execute_turn(self, game_map: GameMap, visible_players: List[Player]):
         grid = Grid(30000, 30000)
@@ -59,6 +69,7 @@ class Bot:
         log.info("Best action: {}".format(the_best_action))
         final_action = the_best_action.get_action(self.player_info, game_map, visible_players, grid)
         log.info("Final action: {}".format(final_action))
+        self.last_action = final_action
         return final_action
 
     def get_mine_position(self):
@@ -68,4 +79,4 @@ class Bot:
         """
         Gets called after executeTurn
         """
-        pass
+        self.last_score = self.player_info.Score
