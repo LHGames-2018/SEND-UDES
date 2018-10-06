@@ -25,7 +25,7 @@ class GoMine(ActionTemplate):
     def calculate_weight(self, player_info: Player, game_map: GameMap, visible_players: List[Player]):
         calculated_weight = 0
 
-        if player_info.CarriedResources == 0:
+        if player_info.CarriedResources <= 500:
             calculated_weight = 1
 
         if game_map.getTileAt(player_info.Position + Point(-1, 0)) == TileContent.Resource \
