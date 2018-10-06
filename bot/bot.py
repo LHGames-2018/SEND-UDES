@@ -47,11 +47,13 @@ class Bot:
                 tile.TileContent
         biggest_weight = -1
         the_best_action: ActionTemplate = None
+        log.info("Determining best action: {}".format(the_best_action))
         for action in self.actions:
             weight = action.calculate_weight(self.PlayerInfo, game_map, visible_players)
             if weight > biggest_weight:
                 biggest_weight = weight
                 the_best_action = action
+        log.info("Best action: {}".format(the_best_action))
         return the_best_action.get_action(self.PlayerInfo, game_map, visible_players)
 
     def get_mine_position(self):
