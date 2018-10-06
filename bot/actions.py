@@ -179,7 +179,7 @@ class GoHunt(ActionTemplate):
 
     def get_action(self, player_info: Player, game_map: GameMap, visible_players: List[Player], grid: Grid):
 
-        visible_players = [p for p in visible_players if p != self.last_kill and
+        visible_players = [p for p in visible_players if p.Name != self.last_kill.Name and
                            calc_damage_to_enemy(player_info, p) > 0]
         if len(visible_players) == 0:
             next_direction = LEFT
