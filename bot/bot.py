@@ -45,24 +45,6 @@ class Bot:
             for tile in column:
                 tile.TileContent                
 
-        if self.PlayerInfo.CarriedRessources == self.PlayerInfo.CarryingCapacity:
-            turn_counter = -3
-
-        global tick
-        global turn_counter
-        log.info("game_map {}".format(game_map))
-        log.info("self {}".format(self.__dict__))
-        log.info("visible_players {}".format(visible_players))
-        tick += 1
-        turn_counter += 1
-
-        if turn_counter < len(sequence) and turn_counter >= 0:
-            log.info("going {}".format(sequence[turn_counter]))
-            return create_move_action(sequence[turn_counter])
-        
-        if turn_counter < 0:
-            log.info("going {}".format(return_way[turn_counter + 3]))
-            return create_move_action(return_way[turn_counter + 3])
 
 
         log.info("collecting")
