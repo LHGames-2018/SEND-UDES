@@ -47,7 +47,7 @@ class Bot:
         grid = Grid(30000, 30000)
         for column in game_map.tiles:
             for t in column:
-                if t.TileContent in (TileContent.Lava, ):
+                if t.TileContent in (TileContent.Lava, TileContent.Player, TileContent.House, TileContent.Shop):
                     grid.walls.add(t.Position.to_coords())
                 if t.TileContent in (TileContent.Wall, ):
                     grid.weights[t.Position.to_coords()] = math.ceil(5 / self.player_info.AttackPower)
@@ -55,10 +55,6 @@ class Bot:
                     grid.walls.add(t.Position.to_coords())
                     grid.resources[t.Position.to_coords()] = t
                     grid.resources_neighbours.update(grid.neighbors(t.Position.to_coords(), (0, 0)))
-                if t.TileContent == TileContent.Player:
-                    for p in visible_players:
-                        if p.Name == self.last_kill:
-                            grid.walls.add(p.Position.to_coords())
 
         grid.house = self.player_info.HouseLocation
         biggest_weight = -1
