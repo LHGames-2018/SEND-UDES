@@ -49,7 +49,7 @@ class Grid:
                     came_from[nxt] = current
             frontier.task_done()
 
-        path = []
+        path = [goal]
         cur = goal
         while cur != start:
             path.append(cur)
