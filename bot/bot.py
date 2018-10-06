@@ -45,8 +45,8 @@ class Bot:
                     grid.walls.add(t.Position.to_coords())
                     grid.resources[t.Position.to_coords()] = t
                     grid.resources_neighbours.update(grid.neighbors(t.Position.to_coords(), (0, 0)))
-                if t.TileContent in (TileContent.House, ):
-                    grid.house = t.Position
+
+        grid.house = self.player_info.HouseLocation
         biggest_weight = -1
         the_best_action: ActionTemplate = None
         log.info("Determining best action: {}".format(the_best_action))
