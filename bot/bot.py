@@ -34,7 +34,7 @@ class Bot:
     def before_turn(self, player_info: Player):
         if isinstance(self.last_action, GoHunt):
             self.last_kill = self.last_action.target or self.last_kill
-        self.actions: List[ActionTemplate] = [GoHunt(self.last_kill), BuyUpgrade(), GoHome(), GoMine(), Mine()]
+        self.actions: List[ActionTemplate] = [GoHome(), GoHunt(self.last_kill), BuyUpgrade(), GoMine(), Mine()]
         self.player_info: Player = player_info
         log.info("Current player state: {}".format(player_info))
         log.info("Last kill: {}".format(self.last_kill))
