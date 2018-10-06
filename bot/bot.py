@@ -37,6 +37,7 @@ class Bot:
             self.last_score = player_info.Score
         
         if isinstance(self.last_action, GoHunt) and player_info.Score != self.last_score:
+            log.info("Detected score change!!!!!!")
             self.last_kill = (self.last_action.target and self.last_action.target.Name) or self.last_kill
         self.actions: List[ActionTemplate] = [GoHome(), GoHunt(self.last_kill), BuyUpgrade(), GoMine(), Mine()]
         self.player_info: Player = player_info

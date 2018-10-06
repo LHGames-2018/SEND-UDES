@@ -184,6 +184,9 @@ class GoHunt(ActionTemplate):
 
         visible_players = [p for p in visible_players if p.Name != self.last_kill and
                            calc_damage_to_enemy(player_info, p) > 0]
+
+        log.info("Visible Players: {}".format(visible_players))
+        log.info("bot ptr: {}".format(self))
         if len(visible_players) == 0:
             next_x, next_y = grid.a_star_search(player_info.Position.to_coords(), Point(-5, 0).to_coords())
 
@@ -208,6 +211,8 @@ class GoHunt(ActionTemplate):
 
         next_position = Point(next_x, next_y)
         next_direction = next_position - player_info.Position
+
+        log.info("Target: {}".format(self.target))
 
         if next_position == self.target.Position or game_map.getTileAt(next_position) == TileContent.Wall:  # If its a tree or a player, cut it down
             return create_attack_action(next_direction)
