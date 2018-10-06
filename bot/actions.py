@@ -43,7 +43,7 @@ class GoMine(ActionTemplate):
 
         next_position = Point(next_x, next_y)
 
-        return create_move_action(next_position - player_info.Position.to_coords())
+        return create_move_action(next_position - player_info.Position)
 
 
 class Mine(ActionTemplate):
@@ -90,7 +90,7 @@ class GoHome(ActionTemplate):
 
         next_position = Point(next_x, next_y)
 
-        return create_move_action(next_position - player_info.Position.to_coords())
+        return create_move_action(next_position - player_info.Position)
 
 
 class BuyUpgrade(ActionTemplate):
