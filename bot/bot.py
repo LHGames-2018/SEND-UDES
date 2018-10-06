@@ -28,7 +28,7 @@ class Bot:
         self.player_info = None
         self.actions = []
 
-    def before_turn(self, player_info):
+    def before_turn(self, player_info: Player):
         self.player_info = player_info
         self.actions = [GoHome(), GoMine(), Mine()]
 
