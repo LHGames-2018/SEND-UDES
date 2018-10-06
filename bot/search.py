@@ -6,6 +6,7 @@ class Grid:
         self.width = width
         self.height = height
         self.walls = set()
+        self.resources = dict()
         self.weights = dict()
     
     def in_bounds(self, coord):
