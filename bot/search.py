@@ -1,5 +1,7 @@
 from queue import PriorityQueue
 
+from helper import Point
+
 
 class Grid:
     def __init__(self, width, height):
@@ -8,6 +10,7 @@ class Grid:
         self.walls = set()
         self.resources = dict()
         self.weights = dict()
+        self.house = Point()
     
     def in_bounds(self, coord):
         x, y = coord

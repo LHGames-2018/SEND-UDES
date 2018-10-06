@@ -40,6 +40,8 @@ class Bot:
                     grid.walls.add((t.Position.x, t.Position.y))
                 if t.TileContent in (TileContent.Resource, ):
                     grid.resources[(t.Position.x, t.Position.y)] = t
+                if t.TileContent in (TileContent.House, ):
+                    grid.house = t.Position
         biggest_weight = -1
         the_best_action: ActionTemplate = None
         log.info("Determining best action: {}".format(the_best_action))
