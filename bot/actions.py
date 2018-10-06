@@ -28,6 +28,12 @@ class GoMine(ActionTemplate):
         if player_info.CarriedResources == 0:
             calculated_weight = 1
 
+        if game_map.getTileAt(player_info.Position + Point(-1, 0)) == TileContent.Resource \
+            or game_map.getTileAt(player_info.Position + Point(1, 0)) == TileContent.Resource \
+            or game_map.getTileAt(player_info.Position + Point(0, -1)) == TileContent.Resource \
+            or game_map.getTileAt(player_info.Position + Point(0, 1)) == TileContent.Resource:
+                calculated_weight = 0
+
         return calculated_weight
 
     def get_action(self, player_info: Player, game_map: GameMap, visible_players: List[Player], grid: Grid):
