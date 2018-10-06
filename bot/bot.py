@@ -34,7 +34,6 @@ class Bot:
         self.PlayerInfo = playerInfo
         self.actions = [GoHome(), GoMine(), Mine()]
 
-
     def execute_turn(self, game_map: GameMap, visible_players: List[Player]):
         """
         This is where you decide what action to take.
@@ -43,8 +42,9 @@ class Bot:
         """
         grid = Grid(game_map.visibleDistance * 2, game_map.visibleDistance * 2)
         for column in game_map.tiles:
-            for tile in column:
-                tile.TileContent                
+            for t in column:
+                if t.TileContent == TileContent.Wall:
+                    grid.walls.add((t.Position.x, t.Position.y))
         for action in self.actions:
             action.calculate_weight(self.PlayerInfo, game_map, visible_players)
 
