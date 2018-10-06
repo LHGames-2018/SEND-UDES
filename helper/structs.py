@@ -24,10 +24,10 @@ class Point(object):
 
     # Overloaded operators
     def __add__(self, point):
-        return Point(self.y + point.x, self.y + point.y)
+        return Point(self.x + point.x, self.y + point.y)
 
     def __sub__(self, point):
-        return Point(self.y - point.x, self.y - point.y)
+        return Point(self.x - point.x, self.y - point.y)
 
     def __str__(self):
         return "{{{0}, {1}}}".format(self.x, self.y)
@@ -37,12 +37,19 @@ class Point(object):
             return self.x == other.x and self.y == other.y
         return NotImplemented
 
+    def dist_to(self, p2):
+        return abs(self.x - p2.x) + abs(self.y - p2.y)
+
+    def to_coords(self):
+        return self.x, self.y
+
     # Distance between two Points
     @staticmethod
     def Distance(p1, p2):
         delta_x = p1.x - p2.x
         delta_y = p1.y - p2.y
         return math.sqrt(math.pow(delta_x, 2) + math.pow(delta_y, 2))
+
 
 
 class GameInfo(object):

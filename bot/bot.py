@@ -1,4 +1,5 @@
 import logging
+from typing import List
 
 from bot import *
 from bot.actions import *
@@ -13,43 +14,46 @@ handler.setLevel(log_level)
 handler.setFormatter(logging.Formatter("%(asctime)-15s - %(levelname)s - line %(lineno)s - %(funcName)s: %(message)s"))
 log.addHandler(handler)
 
-UP    = Point(0, -1)
-DOWN  = Point(0, 1)
-LEFT  = Point(-1, 0)
+UP = Point(0, -1)
+DOWN = Point(0, 1)
+LEFT = Point(-1, 0)
 RIGHT = Point(1, 0)
 
 tick = -1
 turn_counter = -1
 
+
 class Bot:
     def __init__(self):
-        pass
+        self.player_info = None
+        self.actions = []
 
-    def before_turn(self, playerInfo):
-        """
-        Gets called before ExecuteTurn. This is where you get your bot's state.
-            :param playerInfo: Your bot's current state.
-        """
-        self.PlayerInfo = playerInfo
+    def before_turn(self, player_info: Player):
+        self.player_info = player_info
         self.actions = [GoHome(), GoMine(), Mine()]
 
-
-    def execute_turn(self, game_map, visible_players):
-        """
-        This is where you decide what action to take.
-            :param gameMap: The gamemap.
-            :param visiblePlayers:  The list of visible players.
-        """
-        grid = Grid(game_map.visibleDistance * 2, game_map.visibleDistance * 2)
+    def execute_turn(self, game_map: GameMap, visible_players: List[Player]):
+        grid = Grid(30000, 30000)
         for column in game_map.tiles:
-            for tile in column:
-                tile.TileContent                
-
-
-
-        log.info("collecting")
-        return create_collect_action(RIGHT)
-
+            for t in column:
+                if t.TileContent in (TileContent.Wall, TileContent.Lava):
+                    grid.walls.add((t.Position.x, t.Position.y))
+                if t.TileContent in (TileContent.Resource, ):
+                    grid.resources[(t.Position.x, t.Position.y)] = t
+                if t.TileContent in (TileContent.House, ):
+                    grid.house = t.Position
+        biggest_weight = -1
+        the_best_action: ActionTemplate = None
+        log.info("Determining best action: {}".format(the_best_action))
+        for action in self.actions:
+            weight = action.calculate_weight(self.player_info, game_map, visible_players)
+            if weight > biggest_weight:
+                biggest_weight = weight
+                the_best_action = action
+        log.info("Best action: {}".format(the_best_action))
+        final_action = the_best_action.get_action(self.player_info, game_map, visible_players, grid)
+        log.info("Final action: {}".format(final_action))
+        return final_action
 
     def get_mine_position(self):
         return None
