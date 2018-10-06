@@ -29,10 +29,12 @@ class Bot:
         self.actions = []
 
     def before_turn(self, player_info: Player):
-        self.player_info = player_info
-        self.actions = [BuyUpgrade(), GoHome(), GoMine(), Mine()]
+        self.player_info: Player = player_info
+        self.actions: List[ActionTemplate] = [BuyUpgrade(), GoHome(), GoMine(), Mine()]
 
     def execute_turn(self, game_map: GameMap, visible_players: List[Player]):
+        log.info("Levels: Carrying: {} Speed: {}".format(self.player_info.CarryingCapacity, self.player_info.CollectingSpeed))
+        log.info("Money: {}".format(self.player_info.TotalResources))
         grid = Grid(30000, 30000)
         for column in game_map.tiles:
             for t in column:
@@ -43,6 +45,11 @@ class Bot:
                     grid.resources_neighbours.update(grid.neighbors(t.Position.to_coords()))
                 if t.TileContent in (TileContent.House, ):
                     grid.house = t.Position
+        if self.player_info.position == self.player_info.HouseLocation:
+            log.info("at home, trying to upgrade")
+            if self.actions[0].calculate_weight(self.player_info, game_map, visible_players) > 0:
+                log.warning("WE UPGRADEEEEEEE")
+                return self.actions[0].get_action(self.player_info, game_map, visible_players, grid)
         biggest_weight = -1
         the_best_action: ActionTemplate = None
         log.info("Determining best action: {}".format(the_best_action))
