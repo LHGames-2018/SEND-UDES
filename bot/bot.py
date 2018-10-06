@@ -8,13 +8,13 @@ handler.setLevel(log_level)
 handler.setFormatter(logging.Formatter("%(asctime)-15s - %(levelname)s - line %(lineno)s - %(funcName)s: %(message)s"))
 log.addHandler(handler)
 
-UP    = Point(0, 1)
-DOWN  = Point(0, -1)
+UP    = Point(0, -1)
+DOWN  = Point(0, 1)
 LEFT  = Point(-1, 0)
 RIGHT = Point(1, 0)
 
 tick = -1
-sequence = [DOWN, DOWN, DOWN]
+sequence = [DOWN, DOWN, DOWN, DOWN, DOWN, DOWN]
 return_way = [UP, UP, UP]
 
 class Bot:
@@ -50,8 +50,9 @@ class Bot:
         log.info("collecting")
         return create_collect_action(RIGHT)
 
-    def get_mine_position():
-        return 
+
+    def get_mine_position(self):
+        return None
 
     def after_turn(self):
         """
