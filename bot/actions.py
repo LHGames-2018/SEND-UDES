@@ -51,7 +51,7 @@ class GoMine(ActionTemplate):
         next_position = Point(next_x, next_y)
         next_direction = next_position - player_info.Position
 
-        if game_map.getTileAt(next_position).TileContent == TileContent.Wall:  # If its a tree, cut it down
+        if game_map.getTileAt(next_position) == TileContent.Wall:  # If its a tree, cut it down
             return create_attack_action(next_direction)
 
         return create_move_action(next_direction)
@@ -102,7 +102,7 @@ class GoHome(ActionTemplate):
         next_position = Point(next_x, next_y)
         next_direction = next_position - player_info.Position
 
-        if game_map.getTileAt(next_position).TileContent == TileContent.Wall:  # If its a tree, cut it down
+        if game_map.getTileAt(next_position) == TileContent.Wall:  # If its a tree, cut it down
             return create_attack_action(next_direction)
 
         return create_move_action(next_direction)
