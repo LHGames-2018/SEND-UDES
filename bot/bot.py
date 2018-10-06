@@ -77,7 +77,7 @@ class Bot:
         final_move_direction = SIDE_MOVE_ACTIONS.get(final_action)
         if final_move_direction is not None:
             going_to = self.player_info.Position + final_move_direction
-            if going_to in grid.weights:
+            if going_to.to_coords() in grid.weights:
                 # Cut down trees in our path
                 final_action = create_attack_action(final_move_direction)
             else:
