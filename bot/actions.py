@@ -118,6 +118,10 @@ class BuyUpgrade(ActionTemplate):
             elif player_info.CollectingSpeed < self.collect_speed_upgrade[1]:
                 self.thing_to_upgrade = UpgradeType.CollectingSpeed
                 return 1
+            elif player_info.CarryingCapacity < self.carrying_upgrade[2]:
+                return 1
+            elif player_info.CollectingSpeed < self.collect_speed_upgrade[2]:
+                return 1
 
         return 0
 
