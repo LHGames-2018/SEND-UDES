@@ -56,6 +56,9 @@ def create_purchase_action(item):
     """
     return _create_action("PurchaseAction", item)
 
+def create_upgrade_action(item):
+    return _create_action("UpgradeAction", item)
+
 
 def create_empty_action():
     """

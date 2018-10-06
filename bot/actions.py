@@ -91,3 +91,37 @@ class GoHome(ActionTemplate):
         next_position = Point(next_x, next_y)
 
         return create_move_action(next_position - player_info.Position.to_coords())
+
+
+class BuyUpgrade(ActionTemplate):
+
+    def __init__(self):
+
+        self.upgrade_cost = [0, 10000, 15000, 25000, 50000, 100000]
+        self.health_upgrade = [10, 13, 15, 20, 25, 35]
+        self.attack_upgrade = [1, 3, 5, 7, 9, 11]
+        self.defense_upgrade = [1, 3, 5, 7, 9, 11]
+        self.collect_speed_upgrade = [1, 1.25, 1.5, 2, 2.5, 3.5]
+        self.carrying_upgrade = [1000, 1250, 1500, 2000, 3000, 5000]
+
+        self.thing_to_upgrade = None
+
+    def calculate_weight(self, player_info: Player, game_map: GameMap, visible_players: List[Player]):
+
+        if player_info.TotalResources < self.upgrade_cost[1]:
+            return 0
+        else:
+
+            if player_info.CarryingCapacity < self.carrying_upgrade[1]:
+                self.thing_to_upgrade = UpgradeType.CarryingCapacity
+                return 1
+            elif player_info.CollectingSpeed < self.collect_speed_upgrade[1]:
+                self.thing_to_upgrade = UpgradeType.CollectingSpeed
+                return 1
+
+        return 0
+
+    def get_action(self, player_info: Player, game_map: GameMap, visible_players: List[Player], grid: Grid):
+        if player_info.Position == player_info.HouseLocation:
+            return create_upgrade_action(self.thing_to_upgrade)
+        return create_empty_action()
