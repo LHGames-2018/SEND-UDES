@@ -11,6 +11,7 @@ DOWN  = Point(0, 1)
 LEFT  = Point(-1, 0)
 RIGHT = Point(1, 0)
 
+
 class ActionTemplate:
 
     def calculate_weight(self, player_info: Player, game_map: GameMap, visible_players: List[Player]):
@@ -41,16 +42,19 @@ class GoMine(ActionTemplate):
         closest_distance = 1000
         for resource in grid.resources.values():
             current_distance = resource.Position.dist_to(player_info.Position)
-            dist_from_house = resource.Position.dist_to(player_info.HouseLocation)
-            if current_distance < closest_distance and dist_from_house <= 10:
+            if current_distance < closest_distance:
                 closest_position = resource.Position
                 closest_distance = current_distance
 
         next_x, next_y = grid.a_star_search(player_info.Position.to_coords(), closest_position.to_coords())
 
         next_position = Point(next_x, next_y)
+        next_direction = next_position - player_info.Position
 
-        return create_move_action(next_position - player_info.Position)
+        if game_map.getTileAt(next_direction).TileContent == TileContent.Wall:  # If its a tree, cut it down
+            return create_attack_action(next_direction)
+
+        return create_move_action(next_direction)
 
 
 class Mine(ActionTemplate):
@@ -96,8 +100,12 @@ class GoHome(ActionTemplate):
         next_x, next_y = grid.a_star_search(player_info.Position.to_coords(), grid.house.to_coords())
 
         next_position = Point(next_x, next_y)
+        next_direction = next_position - player_info.Position
 
-        return create_move_action(next_position - player_info.Position)
+        if game_map.getTileAt(next_direction).TileContent == TileContent.Wall:  # If its a tree, cut it down
+            return create_attack_action(next_direction)
+
+        return create_move_action(next_direction)
 
 
 class BuyUpgrade(ActionTemplate):

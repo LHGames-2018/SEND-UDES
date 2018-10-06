@@ -1,4 +1,5 @@
 import logging
+import math
 from typing import List
 
 from bot import *
@@ -25,7 +26,7 @@ turn_counter = -1
 
 class Bot:
     def __init__(self):
-        self.player_info = None
+        self.player_info: Player = None
         self.actions = []
 
     def before_turn(self, player_info: Player):
@@ -38,9 +39,12 @@ class Bot:
         grid = Grid(30000, 30000)
         for column in game_map.tiles:
             for t in column:
-                if t.TileContent in (TileContent.Wall, TileContent.Lava):
+                if t.TileContent in (TileContent.Lava, ):
                     grid.walls.add(t.Position.to_coords())
+                if t.TileContent in (TileContent.Wall, ):
+                    grid.weights[t.Position.to_coords()] = math.ceil(5 / self.player_info.AttackPower)
                 if t.TileContent in (TileContent.Resource, ):
+                    grid.walls.add(t.Position.to_coords())
                     grid.resources[t.Position.to_coords()] = t
                     grid.resources_neighbours.update(grid.neighbors(t.Position.to_coords()))
                 if t.TileContent in (TileContent.House, ):

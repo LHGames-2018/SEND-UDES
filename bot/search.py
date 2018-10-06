@@ -53,7 +53,7 @@ class Grid:
         cur = goal
         while cur != start:
             path.append(cur)
-            cur = came_from[cur]
+            cur = came_from.get(cur, start)
 
         return path[-1]
 
