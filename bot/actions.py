@@ -152,3 +152,39 @@ class BuyUpgrade(ActionTemplate):
         if player_info.Position == player_info.HouseLocation:
             return create_upgrade_action(self.thing_to_upgrade)
         return GoHome().get_action(player_info, game_map, visible_players, grid)
+
+
+class GoHunt(ActionTemplate):
+    def __init__(self, last_kill: Player):
+        self.last_kill = last_kill
+
+    def calculate_weight(self, player_info: Player, game_map: GameMap, visible_players: List[Player]):
+        return 1
+
+    def get_action(self, player_info: Player, game_map: GameMap, visible_players: List[Player], grid: Grid):
+        visible_players = [p for p in visible_players if p != self.last_kill]
+        if len(visible_players) == 0:
+            next_direction = LEFT
+
+            if game_map.getTileAt(player_info.Position + next_direction) == TileContent.Wall:  # If its a tree, cut it down
+                return create_attack_action(next_direction)
+
+            return create_move_action(next_direction)
+
+        closest_position = Point(-100, -100)
+        closest_distance = 1000
+        for enemy in visible_players:
+            current_distance = enemy.Position.dist_to(player_info.Position)
+            if current_distance < closest_distance:
+                closest_position = enemy.Position
+                closest_distance = current_distance
+
+        next_x, next_y = grid.a_star_search(player_info.Position.to_coords(), closest_position.to_coords())
+
+        next_position = Point(next_x, next_y)
+        next_direction = next_position - player_info.Position
+
+        if game_map.getTileAt(next_position) in (TileContent.Wall, TileContent.Player):  # If its a tree or a player, cut it down
+            return create_attack_action(next_direction)
+
+        return create_move_action(next_direction)

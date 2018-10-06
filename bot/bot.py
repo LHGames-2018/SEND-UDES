@@ -27,9 +27,11 @@ turn_counter = -1
 class Bot:
     def __init__(self):
         self.player_info: Player = None
-        self.actions: List[ActionTemplate] = [BuyUpgrade(), GoHome(), GoMine(), Mine()]
+        self.actions = []
+        self.last_kill: Player = None
 
     def before_turn(self, player_info: Player):
+        self.actions: List[ActionTemplate] = [GoHunt(self.last_kill), BuyUpgrade(), GoHome(), GoMine(), Mine()]
         self.player_info: Player = player_info
         log.info("Current player state: {}".format(player_info))
 
