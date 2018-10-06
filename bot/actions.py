@@ -11,6 +11,7 @@ DOWN  = Point(0, 1)
 LEFT  = Point(-1, 0)
 RIGHT = Point(1, 0)
 
+
 class ActionTemplate:
 
     def calculate_weight(self, player_info: Player, game_map: GameMap, visible_players: List[Player]):
@@ -48,8 +49,12 @@ class GoMine(ActionTemplate):
         next_x, next_y = grid.a_star_search(player_info.Position.to_coords(), closest_position.to_coords())
 
         next_position = Point(next_x, next_y)
+        next_direction = next_position - player_info.Position
 
-        return create_move_action(next_position - player_info.Position)
+        if game_map.getTileAt(next_position) == TileContent.Wall:  # If its a tree, cut it down
+            return create_attack_action(next_direction)
+
+        return create_move_action(next_direction)
 
 
 class Mine(ActionTemplate):
@@ -95,8 +100,12 @@ class GoHome(ActionTemplate):
         next_x, next_y = grid.a_star_search(player_info.Position.to_coords(), grid.house.to_coords())
 
         next_position = Point(next_x, next_y)
+        next_direction = next_position - player_info.Position
 
-        return create_move_action(next_position - player_info.Position)
+        if game_map.getTileAt(next_position) == TileContent.Wall:  # If its a tree, cut it down
+            return create_attack_action(next_direction)
+
+        return create_move_action(next_direction)
 
 
 class BuyUpgrade(ActionTemplate):

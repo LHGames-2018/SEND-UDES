@@ -1,4 +1,5 @@
 import logging
+import math
 from typing import List
 
 from bot import *
@@ -25,25 +26,33 @@ turn_counter = -1
 
 class Bot:
     def __init__(self):
-        self.player_info = None
+        self.player_info: Player = None
         self.actions = []
 
     def before_turn(self, player_info: Player):
-        self.player_info = player_info
-        self.actions = [BuyUpgrade(), GoHome(), GoMine(), Mine()]
+        self.player_info: Player = player_info
+        log.info("Current player state: {}".format(player_info))
+        self.actions: List[ActionTemplate] = [BuyUpgrade(), GoHome(), GoMine(), Mine()]
 
     def execute_turn(self, game_map: GameMap, visible_players: List[Player]):
         grid = Grid(30000, 30000)
         for column in game_map.tiles:
             for t in column:
-                if t.TileContent in (TileContent.Wall, TileContent.Lava):
+                if t.TileContent in (TileContent.Lava, ):
                     grid.walls.add(t.Position.to_coords())
+                if t.TileContent in (TileContent.Wall, ):
+                    grid.weights[t.Position.to_coords()] = math.ceil(5 / self.player_info.AttackPower)
                 if t.TileContent in (TileContent.Resource, ):
-                    if t.Density == 1:
-                        grid.resources[t.Position.to_coords()] = t
-                        grid.resources_neighbours.update(grid.neighbors(t.Position.to_coords()))
+                    grid.walls.add(t.Position.to_coords())
+                    grid.resources[t.Position.to_coords()] = t
+                    grid.resources_neighbours.update(grid.neighbors(t.Position.to_coords()))
                 if t.TileContent in (TileContent.House, ):
                     grid.house = t.Position
+        if self.player_info.Position == self.player_info.HouseLocation:
+            log.info("at home, trying to upgrade")
+            if self.actions[0].calculate_weight(self.player_info, game_map, visible_players) > 0:
+                log.warning("WE UPGRADEEEEEEE")
+                return self.actions[0].get_action(self.player_info, game_map, visible_players, grid)
         biggest_weight = -1
         the_best_action: ActionTemplate = None
         log.info("Determining best action: {}".format(the_best_action))
