@@ -25,7 +25,7 @@ class GoMine(ActionTemplate):
     def calculate_weight(self, player_info: Player, game_map: GameMap, visible_players: List[Player]):
         calculated_weight = 0
 
-        if player_info.CarriedResources == 0:
+        if player_info.CarriedResources <= 500:
             calculated_weight = 1
 
         if game_map.getTileAt(player_info.Position + Point(-1, 0)) == TileContent.Resource \
@@ -120,13 +120,17 @@ class BuyUpgrade(ActionTemplate):
 
             if player_info.CarryingCapacity < self.carrying_upgrade[1]:
                 self.thing_to_upgrade = UpgradeType.CarryingCapacity
+                log.warning("**********UPGRADE CARRYING TO LEVEL 1**********")
                 return 1
             elif player_info.CollectingSpeed < self.collect_speed_upgrade[1]:
                 self.thing_to_upgrade = UpgradeType.CollectingSpeed
+                log.warning("**********UPGRADE COLLECTING TO LEVEL 1**********")
                 return 1
             elif player_info.CarryingCapacity < self.carrying_upgrade[2]:
+                log.warning("**********UPGRADE CARRYING TO LEVEL 2**********")
                 return 1
             elif player_info.CollectingSpeed < self.collect_speed_upgrade[2]:
+                log.warning("**********UPGRADE COLLECTING TO LEVEL 2**********")
                 return 1
 
         return 0
