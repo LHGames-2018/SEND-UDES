@@ -29,7 +29,7 @@ class Grid:
 
     def a_star_search(self, start, goal):
         frontier = PriorityQueue()
-        frontier.put(start, 0)
+        frontier.put((0, start))
         came_from = {start: None}
         cost_so_far = {start: 0}
 
@@ -44,7 +44,7 @@ class Grid:
                 if nxt not in cost_so_far or new_cost < cost_so_far[nxt]:
                     cost_so_far[nxt] = new_cost
                     priority = new_cost + heuristic(goal, nxt)
-                    frontier.put(nxt, priority)
+                    frontier.put((priority, nxt))
                     came_from[nxt] = current
 
         path = []
