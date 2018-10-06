@@ -53,7 +53,7 @@ class Grid:
             path.append(cur)
             cur = came_from[cur]
 
-        return path[-1] - start
+        return path[-1]
 
 
 def heuristic(a, b):

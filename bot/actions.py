@@ -39,9 +39,11 @@ class GoMine(ActionTemplate):
                 closest_position = resource.Position
                 closest_distance = current_distance
 
-        next_direction = grid.a_star_search(player_info.Position.to_coords(), closest_position.to_coords())
+        next_x, next_y = grid.a_star_search(player_info.Position.to_coords(), closest_position.to_coords())
 
-        return create_move_action(next_direction)
+        next_position = Point(next_x, next_y)
+
+        return create_move_action(next_position - player_info.Position.to_coords())
 
 
 class Mine(ActionTemplate):
