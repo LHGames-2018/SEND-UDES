@@ -185,7 +185,7 @@ class GoHunt(ActionTemplate):
         visible_players = [p for p in visible_players if p.Name != self.last_kill and
                            calc_damage_to_enemy(player_info, p) > 0]
         if len(visible_players) == 0:
-            next_x, next_y = grid.a_star_search(player_info.Position.to_coords(), Point(-5, 0).to_coords())
+            next_x, next_y = grid.a_star_search(player_info.Position.to_coords(), Point(0, -5).to_coords())
 
             next_position = Point(next_x, next_y)
             next_direction = next_position - player_info.Position
