@@ -39,8 +39,9 @@ class Bot:
                 if t.TileContent in (TileContent.Wall, TileContent.Lava):
                     grid.walls.add(t.Position.to_coords())
                 if t.TileContent in (TileContent.Resource, ):
-                    grid.resources[t.Position.to_coords()] = t
-                    grid.resources_neighbours.update(grid.neighbors(t.Position.to_coords()))
+                    if t.Density == 1:
+                        grid.resources[t.Position.to_coords()] = t
+                        grid.resources_neighbours.update(grid.neighbors(t.Position.to_coords()))
                 if t.TileContent in (TileContent.House, ):
                     grid.house = t.Position
         biggest_weight = -1
