@@ -3,14 +3,15 @@ from typing import List
 from bot.search import Grid
 from helper import *
 from math import *
-
-log = logging.getLogger("main")
 from helper.aiHelper import *
 
-UP    = Point(0, -1)
-DOWN  = Point(0, 1)
-LEFT  = Point(-1, 0)
+log = logging.getLogger("main")
+
+UP = Point(0, -1)
+DOWN = Point(0, 1)
+LEFT = Point(-1, 0)
 RIGHT = Point(1, 0)
+
 
 def calc_damage_to_enemy(us: Player, enemy: Player):
 
@@ -25,6 +26,24 @@ def calc_damage_to_enemy(us: Player, enemy: Player):
 
     return floor(3 + us.AttackPower + offensive_item_damage - 2 * (enemy.Defence + defensive_item_blocking) ** 0.6)
 
+
+def move(grid: Grid, from_pos: Point, to_pos: Point):
+    next_x, next_y = grid.a_star_search(from_pos.to_coords(), to_pos.to_coords())
+
+    next_position = Point(next_x, next_y)
+    next_direction = next_position - from_pos
+
+    if next_position.to_coords() in grid.weights:  # If its a tree, cut it down
+        return create_attack_action(next_direction)
+
+    return create_move_action(next_direction)
+
+
+def is_next_to(game_map: GameMap, pos: Point, tile_type: TileContent):
+    return game_map.getTileAt(pos + LEFT) == tile_type \
+           or game_map.getTileAt(pos + RIGHT) == tile_type \
+           or game_map.getTileAt(pos + DOWN) == tile_type \
+           or game_map.getTileAt(pos + UP) == tile_type
 
 
 class ActionTemplate:
@@ -44,10 +63,7 @@ class GoMine(ActionTemplate):
         if player_info.CarriedResources <= 500:
             calculated_weight = 1
 
-        if game_map.getTileAt(player_info.Position + Point(-1, 0)) == TileContent.Resource \
-            or game_map.getTileAt(player_info.Position + Point(1, 0)) == TileContent.Resource \
-            or game_map.getTileAt(player_info.Position + Point(0, -1)) == TileContent.Resource \
-            or game_map.getTileAt(player_info.Position + Point(0, 1)) == TileContent.Resource:
+        if is_next_to(game_map, player_info.Position, TileContent.Resource):
                 calculated_weight = 0
 
         return calculated_weight
@@ -61,15 +77,7 @@ class GoMine(ActionTemplate):
                 closest_position = resource.Position
                 closest_distance = current_distance
 
-        next_x, next_y = grid.a_star_search(player_info.Position.to_coords(), closest_position.to_coords())
-
-        next_position = Point(next_x, next_y)
-        next_direction = next_position - player_info.Position
-
-        if game_map.getTileAt(next_position) == TileContent.Wall:  # If its a tree, cut it down
-            return create_attack_action(next_direction)
-
-        return create_move_action(next_direction)
+        return move(grid, player_info.Position, closest_position)
 
 
 class Mine(ActionTemplate):
@@ -77,27 +85,17 @@ class Mine(ActionTemplate):
     def calculate_weight(self, player_info: Player, game_map: GameMap, visible_players: List[Player]):
         calculated_weight = 0
 
-        if game_map.getTileAt(player_info.Position + Point(-1, 0)) == TileContent.Resource\
-                or game_map.getTileAt(player_info.Position + Point(1, 0)) == TileContent.Resource\
-                or game_map.getTileAt(player_info.Position + Point(0, -1)) == TileContent.Resource\
-                or game_map.getTileAt(player_info.Position + Point(0, 1)) == TileContent.Resource:
+        if is_next_to(game_map, player_info.Position, TileContent.Resource):
             calculated_weight = 1
 
         return calculated_weight
 
     def get_action(self, player_info: Player, game_map: GameMap, visible_players: List[Player], grid: Grid):
-        direction = UP
+        for direction in (LEFT, RIGHT, UP, DOWN):
+            if game_map.getTileAt(player_info.Position + direction) == TileContent.Resource:
+                return create_collect_action(direction)
 
-        if game_map.getTileAt(player_info.Position + Point(-1, 0)) == TileContent.Resource:
-            direction = LEFT
-        elif game_map.getTileAt(player_info.Position + Point(1, 0)) == TileContent.Resource:
-            direction = RIGHT
-        elif game_map.getTileAt(player_info.Position + Point(0, -1)) == TileContent.Resource:
-            direction = UP
-        elif game_map.getTileAt(player_info.Position + Point(0, 1)) == TileContent.Resource:
-            direction = DOWN
-
-        return create_collect_action(direction)
+        return create_empty_action()
 
 
 class GoHome(ActionTemplate):
@@ -111,16 +109,7 @@ class GoHome(ActionTemplate):
         return calculated_weight
 
     def get_action(self, player_info: Player, game_map: GameMap, visible_players: List[Player], grid: Grid):
-
-        next_x, next_y = grid.a_star_search(player_info.Position.to_coords(), grid.house.to_coords())
-
-        next_position = Point(next_x, next_y)
-        next_direction = next_position - player_info.Position
-
-        if game_map.getTileAt(next_position) == TileContent.Wall:  # If its a tree, cut it down
-            return create_attack_action(next_direction)
-
-        return create_move_action(next_direction)
+        return move(grid, player_info.Position, player_info.HouseLocation)
 
 
 class BuyUpgrade(ActionTemplate):
@@ -169,7 +158,7 @@ class BuyUpgrade(ActionTemplate):
     def get_action(self, player_info: Player, game_map: GameMap, visible_players: List[Player], grid: Grid):
         if player_info.Position == player_info.HouseLocation:
             return create_upgrade_action(self.thing_to_upgrade)
-        return GoHome().get_action(player_info, game_map, visible_players, grid)
+        return move(grid, player_info.Position, player_info.HouseLocation)
 
 
 class GoHunt(ActionTemplate):
@@ -185,12 +174,7 @@ class GoHunt(ActionTemplate):
         visible_players = [p for p in visible_players if p.Name != self.last_kill and
                            calc_damage_to_enemy(player_info, p) > 0]
         if len(visible_players) == 0:
-            next_direction = LEFT
-
-            if game_map.getTileAt(player_info.Position + next_direction) == TileContent.Wall:  # If its a tree, cut it down
-                return create_attack_action(next_direction)
-
-            return create_move_action(next_direction)
+            return move(grid, player_info.Position, LEFT.mul(5))
 
         closest_position = Point(-100, -100)
         closest_distance = 1000
