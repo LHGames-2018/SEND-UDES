@@ -49,7 +49,7 @@ class Bot:
                     grid.resources_neighbours.update(grid.neighbors(t.Position.to_coords()))
                 if t.TileContent in (TileContent.House, ):
                     grid.house = t.Position
-        if self.player_info.position == self.player_info.HouseLocation:
+        if self.player_info.Position == self.player_info.HouseLocation:
             log.info("at home, trying to upgrade")
             if self.actions[0].calculate_weight(self.player_info, game_map, visible_players) > 0:
                 log.warning("WE UPGRADEEEEEEE")
