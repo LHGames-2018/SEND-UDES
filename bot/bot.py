@@ -44,14 +44,15 @@ class Bot:
         grid = Grid(game_map.visibleDistance * 2, game_map.visibleDistance * 2)
         for column in game_map.tiles:
             for tile in column:
-                tile.TileContent                
+                tile.TileContent
+        biggest_weight = -1
+        the_best_action: ActionTemplate = None
         for action in self.actions:
-            action.calculate_weight(self.PlayerInfo, game_map, visible_players)
-
-
-
-        log.info("collecting")
-        return create_collect_action(RIGHT)
+            weight = action.calculate_weight(self.PlayerInfo, game_map, visible_players)
+            if weight > biggest_weight:
+                biggest_weight = weight
+                the_best_action = action
+        return the_best_action.get_action(self.PlayerInfo, game_map, visible_players)
 
     def get_mine_position(self):
         return None
