@@ -58,7 +58,18 @@ class Mine(ActionTemplate):
         return calculated_weight
 
     def get_action(self, player_info: Player, game_map: GameMap, visible_players: List[Player], grid: Grid):
-        return create_collect_action(UP)
+        direction = UP
+
+        if game_map.getTileAt(player_info.Position + Point(-1, 0)) == TileContent.Resource:
+            direction = LEFT
+        elif game_map.getTileAt(player_info.Position + Point(1, 0)) == TileContent.Resource:
+            direction = RIGHT
+        elif game_map.getTileAt(player_info.Position + Point(0, -1)) == TileContent.Resource:
+            direction = UP
+        elif game_map.getTileAt(player_info.Position + Point(0, 1)) == TileContent.Resource:
+            direction = DOWN
+
+        return create_collect_action(direction)
 
 
 class GoHome(ActionTemplate):
@@ -73,4 +84,7 @@ class GoHome(ActionTemplate):
 
     def get_action(self, player_info: Player, game_map: GameMap, visible_players: List[Player], grid: Grid):
 
-        return create_move_action(UP)
+        next_direction = grid.a_star_search(player_info.Position.to_coords, grid.house.to_coords)
+
+        return create_move_action(next_direction)
+    
