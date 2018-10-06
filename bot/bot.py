@@ -37,9 +37,10 @@ class Bot:
         for column in game_map.tiles:
             for t in column:
                 if t.TileContent in (TileContent.Wall, TileContent.Lava):
-                    grid.walls.add((t.Position.x, t.Position.y))
+                    grid.walls.add(t.Position.to_coords())
                 if t.TileContent in (TileContent.Resource, ):
-                    grid.resources[(t.Position.x, t.Position.y)] = t
+                    grid.resources[t.Position.to_coords()] = t
+                    grid.resources_neighbours.update(grid.neighbors(t.Position.to_coords()))
                 if t.TileContent in (TileContent.House, ):
                     grid.house = t.Position
         biggest_weight = -1
