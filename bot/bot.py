@@ -28,7 +28,7 @@ class Bot:
     def __init__(self):
         self.player_info: Player = None
         self.actions = []
-        self.last_kill: Player = None
+        self.last_kill: str = ""
         self.last_action = None
 
     def before_turn(self, player_info: Player):

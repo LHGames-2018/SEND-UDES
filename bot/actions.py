@@ -170,7 +170,7 @@ class BuyUpgrade(ActionTemplate):
 
 
 class GoHunt(ActionTemplate):
-    def __init__(self, last_kill: Player):
+    def __init__(self, last_kill: str):
         self.last_kill = last_kill
         self.target = None
 
@@ -179,7 +179,7 @@ class GoHunt(ActionTemplate):
 
     def get_action(self, player_info: Player, game_map: GameMap, visible_players: List[Player], grid: Grid):
 
-        visible_players = [p for p in visible_players if p.Name != self.last_kill.Name and
+        visible_players = [p for p in visible_players if p.Name != self.last_kill and
                            calc_damage_to_enemy(player_info, p) > 0]
         if len(visible_players) == 0:
             next_direction = LEFT
