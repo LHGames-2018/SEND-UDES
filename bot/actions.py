@@ -41,7 +41,8 @@ class GoMine(ActionTemplate):
         closest_distance = 1000
         for resource in grid.resources.values():
             current_distance = resource.Position.dist_to(player_info.Position)
-            if current_distance < closest_distance:
+            dist_from_house = resource.Position.dist_to(player_info.HouseLocation)
+            if current_distance < closest_distance and dist_from_house <= 10:
                 closest_position = resource.Position
                 closest_distance = current_distance
 
@@ -128,9 +129,11 @@ class BuyUpgrade(ActionTemplate):
                 return 1
             elif player_info.CarryingCapacity < self.carrying_upgrade[2]:
                 log.warning("**********UPGRADE CARRYING TO LEVEL 2**********")
+                self.thing_to_upgrade = UpgradeType.CarryingCapacity
                 return 1
             elif player_info.CollectingSpeed < self.collect_speed_upgrade[2]:
                 log.warning("**********UPGRADE COLLECTING TO LEVEL 2**********")
+                self.thing_to_upgrade = UpgradeType.CollectingSpeed
                 return 1
 
         return 0
