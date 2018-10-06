@@ -119,7 +119,6 @@ class BuyUpgrade(ActionTemplate):
     def calculate_weight(self, player_info: Player, game_map: GameMap, visible_players: List[Player]):
 
         if player_info.TotalResources < self.upgrade_cost[1]:
-            log.info("No upgrade cuz too poor: {}".format(player_info.TotalResources))
             return 0
         else:
             if player_info.AttackPower < self.attack_upgrade[1]:
@@ -163,6 +162,7 @@ class GoHunt(ActionTemplate):
 
         visible_players = [p for p in visible_players if p.Name != self.last_kill and
                            calc_damage_to_enemy(player_info, p) > 0]
+
         if len(visible_players) == 0:
             return move(grid, player_info.Position, LEFT.mul(5))
 
