@@ -51,7 +51,9 @@ class Bot:
                 biggest_weight = weight
                 the_best_action = action
         log.info("Best action: {}".format(the_best_action))
-        return the_best_action.get_action(self.player_info, game_map, visible_players, grid)
+        final_action = the_best_action.get_action(self.player_info, game_map, visible_players, grid)
+        log.info("Final action: {}".format(final_action))
+        return final_action
 
     def get_mine_position(self):
         return None
