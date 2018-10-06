@@ -44,6 +44,7 @@ class Bot:
         log.info("Last kill: {}".format(self.last_kill))
 
     def execute_turn(self, game_map: GameMap, visible_players: List[Player]):
+        log.info("Yes osti sava? New log mister :p")
         grid = Grid(30000, 30000)
         for column in game_map.tiles:
             for t in column:
