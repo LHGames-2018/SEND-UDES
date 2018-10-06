@@ -63,7 +63,7 @@ def create_upgrade_action(item):
     type of tile, the action will fail. You can only upgrade 5 times for one type
         :param item: The type of upgrade.
     """
-    return _create_action("UpgradeAction", item)
+    return _create_action_int("UpgradeAction", item)
 
 def create_empty_action():
     """
@@ -78,4 +78,12 @@ def _create_action(action_type, target):
     You shouldn't call this.
     """
     actionContent = ActionContent(action_type, json.dumps(target.__dict__))
+    return json.dumps(actionContent.__dict__)
+
+def _create_action_int(action_type, target):
+    """
+    Private method to convert the action to a string.
+    You shouldn't call this.
+    """
+    actionContent = ActionContent(action_type, json.dumps(target))
     return json.dumps(actionContent.__dict__)
