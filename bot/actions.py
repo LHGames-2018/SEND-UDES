@@ -86,7 +86,8 @@ class GoHome(ActionTemplate):
 
     def get_action(self, player_info: Player, game_map: GameMap, visible_players: List[Player], grid: Grid):
 
-        next_direction = grid.a_star_search(player_info.Position.to_coords, grid.house.to_coords)
+        next_x, next_y = grid.a_star_search(player_info.Position.to_coords(), grid.house.to_coords())
 
-        return create_move_action(next_direction)
-    
+        next_position = Point(next_x, next_y)
+
+        return create_move_action(next_position - player_info.Position.to_coords())
