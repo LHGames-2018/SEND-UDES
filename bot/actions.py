@@ -186,7 +186,7 @@ class GoHunt(ActionTemplate):
         next_position = Point(next_x, next_y)
         next_direction = next_position - player_info.Position
 
-        if game_map.getTileAt(next_position) in (TileContent.Wall, TileContent.Player):  # If its a tree or a player, cut it down
+        if next_position == self.target.Position or game_map.getTileAt(next_position) == TileContent.Wall:  # If its a tree or a player, cut it down
             return create_attack_action(next_direction)
 
         return create_move_action(next_direction)
