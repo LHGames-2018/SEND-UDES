@@ -40,10 +40,10 @@ class Bot:
             :param gameMap: The gamemap.
             :param visiblePlayers:  The list of visible players.
         """
-        grid = Grid(game_map.visibleDistance * 2, game_map.visibleDistance * 2)
+        grid = Grid(30000, 30000)
         for column in game_map.tiles:
             for t in column:
-                if t.TileContent == TileContent.Wall:
+                if t.TileContent in (TileContent.Wall, TileContent.Lava):
                     grid.walls.add((t.Position.x, t.Position.y))
         biggest_weight = -1
         the_best_action: ActionTemplate = None
