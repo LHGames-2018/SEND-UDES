@@ -114,8 +114,8 @@ class BuyUpgrade(ActionTemplate):
 
         self.upgrade_cost = [0, 10000, 15000, 25000, 50000, 100000]
         self.health_upgrade = [10, 13, 15, 20, 25, 35]
-        self.attack_upgrade = [1, 2, 5, 7, 9, 11]
-        self.defense_upgrade = [1, 2, 5, 7, 9, 11]
+        self.attack_upgrade = [1, 2, 4, 6, 8, 10]
+        self.defense_upgrade = [1, 2, 4, 6, 8, 10]
         self.collect_speed_upgrade = [1, 1.25, 1.5, 2, 2.5, 3.5]
         self.carrying_upgrade = [1000, 1250, 1500, 2000, 3000, 5000]
 
