@@ -2,6 +2,7 @@ import logging
 import math
 from typing import List
 import pickle
+import os.path
 
 from bot import *
 from bot.actions import *
@@ -34,12 +35,15 @@ class Bot:
         self.last_score = None
 
     def before_turn(self, player_info: Player):
-        with open("last_score", "bw") as fp:
-            self.last_score = pickle.load(fp)
-        with open("last_kill", "bw") as fp:
-            self.last_kill = pickle.load(fp)
-        with open("last_action", "bw") as fp:
-            self.last_action = pickle.load(fp)
+        if os.path.exists("last_score"):
+            with open("last_score", "br") as fp:
+                self.last_score = pickle.load(fp)
+        if os.path.exists("last_kill"):
+            with open("last_kill", "br") as fp:
+                self.last_kill = pickle.load(fp)
+        if os.path.exists("last_action"):
+            with open("last_action", "br") as fp:
+                self.last_action = pickle.load(fp)
 
         if self.last_score is None:
             self.last_score = player_info.Score
