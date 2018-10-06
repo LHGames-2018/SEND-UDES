@@ -1,7 +1,10 @@
-from helper import *
-from actions import *
-import search
 import logging
+
+from bot import *
+from bot.actions import *
+from helper import *
+from bot.search import *
+
 log = logging.getLogger("main")
 log_level = logging.DEBUG
 log.setLevel(log_level)
@@ -37,7 +40,7 @@ class Bot:
             :param gameMap: The gamemap.
             :param visiblePlayers:  The list of visible players.
         """
-        grid = search.Grid(game_map.visibleDistance * 2, game_map.visibleDistance * 2)
+        grid = Grid(game_map.visibleDistance * 2, game_map.visibleDistance * 2)
         for column in game_map.tiles:
             for tile in column:
                 tile.TileContent                
