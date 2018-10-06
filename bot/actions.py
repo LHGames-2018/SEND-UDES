@@ -124,4 +124,4 @@ class BuyUpgrade(ActionTemplate):
     def get_action(self, player_info: Player, game_map: GameMap, visible_players: List[Player], grid: Grid):
         if player_info.Position == player_info.HouseLocation:
             return create_upgrade_action(self.thing_to_upgrade)
-        return create_empty_action()
+        return GoHome().get_action(player_info, game_map, visible_players, grid)
