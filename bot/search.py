@@ -9,6 +9,7 @@ class Grid:
         self.height = height
         self.walls = set()
         self.resources = dict()
+        self.resources_neighbours = set()
         self.weights = dict()
         self.house = Point()
     
